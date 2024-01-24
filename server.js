@@ -82,6 +82,7 @@ const menu = () => {
           await addEmployee();
           break;
         case "Update Employee Role":
+          await updateEmployeeRole();
           break;
         case "View All Roles":
           await viewRoles();
@@ -164,12 +165,36 @@ const addEmployee = async () => {
   INSERT INTO employee 
     (first_name, 
     last_name, 
-    manager_id, 
-    role_id) 
+    role_id, 
+    manager_id) 
   VALUES (?, ?, ?, ?)`,
     [first_name, last_name, role, manager]
   );
   console.log(`Added ${first_name} ${last_name} to the database`);
+};
+
+const updateEmployeeRole = async () => {
+  const { employee, role } = await inquirer.prompt([
+    {
+      type: "list",
+      name: "employee",
+      message: "Which employee's roll do you want to update?",
+      choices: await getEmployees(),
+    },
+    {
+      type: "list",
+      name: "role",
+      message: "Which role do you want to assign the selected employee?",
+      choices: await getRoles(),
+    },
+  ]);
+  await db.query(
+    `
+  UPDATE employee 
+  SET role_id = ? 
+  WHERE employee.id = ?`,
+    [role, employee]
+  );
 };
 
 const viewRoles = async () => {
