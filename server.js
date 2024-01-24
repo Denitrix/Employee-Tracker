@@ -10,9 +10,6 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// Connect to database
-let db;
-
 // Default response for any other request (Not Found)
 app.use((req, res) => {
   res.status(404).end();
@@ -21,6 +18,9 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 }); */
+
+// Connect to database
+let db;
 
 const init = async () => {
   db = await mysql.createConnection(
@@ -88,8 +88,6 @@ const menu = () => {
           break;
         case "Add a Role":
           break;
-        case "Delete a Role":
-          break;
         case "View All Departments":
           viewDepartment();
           break;
@@ -119,6 +117,15 @@ const viewEmployees = async () => {
   menu();
 };
 
+const getEmployees = async () => {
+  const [rows, fields] = await db.execute(`
+  SELECT 
+    id AS value, 
+    CONCAT(first_name, " ", last_name) AS name 
+  FROM employee`);
+  return rows;
+};
+
 const viewRoles = async () => {
   const [rows, fields] = await db.execute(`
     SELECT
@@ -131,6 +138,15 @@ const viewRoles = async () => {
     `);
   console.table(rows);
   menu();
+};
+
+const getRoles = async () => {
+  const [rows, fields] = await db.execute(`
+  SELECT 
+    id AS value, 
+    title AS name 
+  FROM role`);
+  return rows;
 };
 
 const viewDepartment = async () => {
