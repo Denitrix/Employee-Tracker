@@ -86,6 +86,7 @@ const menu = () => {
           await viewRoles();
           break;
         case "Add a Role":
+          await addRole();
           break;
         case "View All Departments":
           await viewDepartments();
@@ -150,6 +151,32 @@ const getRoles = async () => {
   return rows;
 };
 
+const addRole = async () => {
+  const { title, salary, department } = await inquirer.prompt([
+    {
+      type: "input",
+      name: "title",
+      message: "What is the name of the role?",
+    },
+    {
+      type: "input",
+      name: "salary",
+      message: "What is the salary of the role?",
+    },
+    {
+      type: "list",
+      name: "department",
+      message: "Which department does the role belong to?",
+      choices: await getDepartments(),
+    },
+  ]);
+  await db.query(
+    `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`,
+    [title, salary, department]
+  );
+  console.log(`Added ${title} to the database`);
+};
+
 const viewDepartments = async () => {
   const [rows, fields] = await db.query(`
     SELECT
@@ -170,13 +197,13 @@ const getDepartments = async () => {
 };
 
 const addDepartment = async () => {
-  const { departmentName } = await inquirer.prompt({
+  const { name } = await inquirer.prompt({
     type: "input",
-    name: "departmentName",
+    name: "name",
     message: "What is the name of the department?",
   });
-  await db.query(`INSERT INTO department (name) VALUES (?)`, [departmentName]);
-  console.log(`Added ${departmentName} to the database`);
+  await db.query(`INSERT INTO department (name) VALUES (?)`, [name]);
+  console.log(`Added ${name} to the database`);
 };
 
 init();
