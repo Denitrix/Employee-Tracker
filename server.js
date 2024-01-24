@@ -1,6 +1,7 @@
 const express = require("express");
 // Import and require mysql2
 const mysql = require("mysql2");
+const inquirer = require("inquirer");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -30,3 +31,25 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+const init = () => {
+  console.log(",----------------------------------------------------.");
+  console.log("|                                                    |");
+  console.log("|   ______                 _                         |");
+  console.log("|  |  ____|_ __ ___  _ __ | | ___  _   _  ___  ___   |");
+  console.log("|  |   _| | '_ ` _ \\| '_ \\| |/ _ \\| | | |/ _ \\/ _ \\  |");
+  console.log("|  |  |___| | | | | | |_) | | (_) | |_| |  __/  __/  |");
+  console.log("|  |______|_| |_| |_| .__/|_|\\___/ \\__, |\\___|\\___|  |");
+  console.log("|                   |_|            |___/             |");
+  console.log("|   __  __                                           |");
+  console.log("|  |  \\/  | __ _ _ __   __ _  __ _  ___ _ __         |");
+  console.log("|  | |\\/| |/ _` | '_ \\ / _` |/ _` |/ _ \\ '__|        |");
+  console.log("|  | |  | | (_| | | | | (_| | (_| |  __/ |           |");
+  console.log("|  |_|  |_|\\__,_|_| |_|\\__,_|\\__, |\\___|_|           |");
+  console.log("|                            |___/                   |");
+  console.log("|                                                    |");
+  console.log("|                                                    |");
+  console.log("`----------------------------------------------------'");
+};
+
+init();
