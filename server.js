@@ -79,6 +79,7 @@ const menu = () => {
           await viewEmployees();
           break;
         case "Add Employee":
+          await addEmployee();
           break;
         case "Update Employee Role":
           break;
@@ -129,6 +130,48 @@ const getEmployees = async () => {
   return rows;
 };
 
+const addEmployee = async () => {
+  const employees = await getEmployees();
+  employees.unshift({ name: "None", value: null });
+
+  const { first_name, last_name, role, manager } = await inquirer.prompt([
+    {
+      type: "input",
+      name: "first_name",
+      message: "What is the employee's first name?",
+    },
+    {
+      type: "input",
+      name: "last_name",
+      message: "What is the employee's last name?",
+    },
+    {
+      type: "list",
+      name: "role",
+      message: "What is the employee's role?",
+      choices: await getRoles(),
+    },
+    {
+      type: "list",
+      name: "manager",
+      message: "Who is the employee's manager?",
+      choices: employees,
+    },
+  ]);
+
+  await db.query(
+    `
+  INSERT INTO employee 
+    (first_name, 
+    last_name, 
+    manager_id, 
+    role_id) 
+  VALUES (?, ?, ?, ?)`,
+    [first_name, last_name, role, manager]
+  );
+  console.log(`Added ${first_name} ${last_name} to the database`);
+};
+
 const viewRoles = async () => {
   const [rows, fields] = await db.query(`
     SELECT
@@ -171,7 +214,11 @@ const addRole = async () => {
     },
   ]);
   await db.query(
-    `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`,
+    `INSERT INTO role 
+      (title, 
+      salary, 
+      department_id) 
+    VALUES (?, ?, ?)`,
     [title, salary, department]
   );
   console.log(`Added ${title} to the database`);
