@@ -50,6 +50,53 @@ const init = () => {
   console.log("|                                                    |");
   console.log("|                                                    |");
   console.log("`----------------------------------------------------'");
+
+  menu();
+};
+
+const menu = () => {
+  inquirer
+    .prompt({
+      type: "list",
+      name: "menu",
+      message: "What would you like to do?",
+      choices: [
+        "View All Employees",
+        "Add Employee",
+        "Update Employee Role",
+        "View All Roles",
+        "Add a Role",
+        "Delete a Role",
+        "View All Departments",
+        "Add Department",
+        "Quit",
+      ],
+    })
+    .then((answers) => {
+      const selection = answers.menu;
+      switch (selection) {
+        case "View All Employees":
+          viewEmployees();
+          break;
+        case "Add Employee":
+          add;
+          break;
+        case "Update Employee Role":
+          break;
+        case "View All Roles":
+          break;
+        case "Add a Role":
+          break;
+        case "Delete a Role":
+          break;
+        case "View All Departments":
+          break;
+        case "Add Department":
+          break;
+        case "Quit":
+          process.exit();
+      }
+    });
 };
 
 init();
