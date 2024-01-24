@@ -67,40 +67,43 @@ const menu = () => {
         "Update Employee Role",
         "View All Roles",
         "Add a Role",
-        "Delete a Role",
         "View All Departments",
         "Add Department",
         "Quit",
       ],
     })
-    .then((answers) => {
+    .then(async (answers) => {
       const selection = answers.menu;
       switch (selection) {
         case "View All Employees":
-          viewEmployees();
+          await viewEmployees();
           break;
         case "Add Employee":
           break;
         case "Update Employee Role":
           break;
         case "View All Roles":
-          viewRoles();
+          await viewRoles();
           break;
         case "Add a Role":
           break;
         case "View All Departments":
-          viewDepartment();
+          await viewDepartments();
           break;
         case "Add Department":
+          await addDepartment();
           break;
         case "Quit":
           process.exit();
       }
+    })
+    .then(() => {
+      menu();
     });
 };
 
 const viewEmployees = async () => {
-  const [rows, fields] = await db.execute(`
+  const [rows, fields] = await db.query(`
     SELECT 
       e.id AS ID, 
       e.first_name AS First_Name, 
@@ -114,50 +117,66 @@ const viewEmployees = async () => {
     JOIN  department d ON r.department_id = d.id
     LEFT JOIN employee AS m ON e.manager_id = m.id`);
   console.table(rows);
-  menu();
 };
 
 const getEmployees = async () => {
-  const [rows, fields] = await db.execute(`
-  SELECT 
-    id AS value, 
-    CONCAT(first_name, " ", last_name) AS name 
-  FROM employee`);
+  const [rows, fields] = await db.query(`
+    SELECT 
+     id AS value, 
+     CONCAT(first_name, " ", last_name) AS name 
+    FROM employee`);
   return rows;
 };
 
 const viewRoles = async () => {
-  const [rows, fields] = await db.execute(`
+  const [rows, fields] = await db.query(`
     SELECT
       r.id AS ID, 
       r.title AS Title, 
-      r.salary AS Salary, 
-      d.name AS Department 
+      d.name AS Department, 
+      r.salary AS Salary 
     FROM role AS r
     JOIN department d ON r.department_id = d.id
     `);
   console.table(rows);
-  menu();
 };
 
 const getRoles = async () => {
-  const [rows, fields] = await db.execute(`
-  SELECT 
-    id AS value, 
+  const [rows, fields] = await db.query(`
+    SELECT 
+     id AS value, 
     title AS name 
-  FROM role`);
+   FROM role`);
   return rows;
 };
 
-const viewDepartment = async () => {
-  const [rows, fields] = await db.execute(`
+const viewDepartments = async () => {
+  const [rows, fields] = await db.query(`
     SELECT
       id AS ID, 
       name AS Department 
     FROM department
     `);
   console.table(rows);
-  menu();
+};
+
+const getDepartments = async () => {
+  const [rows, fields] = await db.query(`
+    SELECT 
+     id AS value, 
+      name AS name 
+    FROM department`);
+  return rows;
+};
+
+const addDepartment = async () => {
+  const { departmentName } = await inquirer.prompt({
+    type: "input",
+    name: "departmentName",
+    message: "What is the name of the department?",
+  });
+  await db.query(`INSERT INTO department (name) VALUES (?)`, [departmentName]);
+  console.log(`Added ${departmentName} to the database`);
 };
 
 init();
