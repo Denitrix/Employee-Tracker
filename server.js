@@ -34,17 +34,6 @@ const init = async () => {
     },
     console.log(`Connected to the employee_db database.`)
   );
-
-// Default response for any other request (Not Found)
-app.use((req, res) => {
-  res.status(404).end();
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
-const init = () => {
   console.log(",----------------------------------------------------.");
   console.log("|                                                    |");
   console.log("|   ______                 _                         |");
@@ -91,7 +80,6 @@ const menu = () => {
           viewEmployees();
           break;
         case "Add Employee":
-          add;
           break;
         case "Update Employee Role":
           break;
@@ -109,6 +97,25 @@ const menu = () => {
           process.exit();
       }
     });
+};
+
+const viewEmployees = async () => {
+  const [rows, fields] = await db.execute(
+    `SELECT 
+      e.id AS ID, 
+      e.first_name AS First_Name, 
+      e.last_name AS Last_Name, 
+      r.title AS Role, 
+      d.name AS Department, 
+      r.salary AS Salary, 
+      CONCAT(m.first_name, ' ', m.last_name) AS Manager
+    FROM employee AS e
+    LEFT JOIN role r ON e.role_id = r.id
+    JOIN  department d ON r.department_id = d.id
+    LEFT JOIN employee AS m ON e.manager_id = m.id`
+  );
+  console.table(rows);
+  menu();
 };
 
 init();
