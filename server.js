@@ -64,11 +64,14 @@ const menu = () => {
       choices: [
         "View All Employees",
         "Add Employee",
+        "Delete Employee",
         "Update Employee Role",
         "View All Roles",
         "Add a Role",
+        "Delete Role",
         "View All Departments",
         "Add Department",
+        "Delete Department",
         "Quit",
       ],
     })
@@ -81,6 +84,9 @@ const menu = () => {
         case "Add Employee":
           await addEmployee();
           break;
+        case "Delete Employee":
+          await deleteEmployee();
+          break;
         case "Update Employee Role":
           await updateEmployeeRole();
           break;
@@ -90,11 +96,17 @@ const menu = () => {
         case "Add a Role":
           await addRole();
           break;
+        case "Delete Role":
+          await deleteRole();
+          break;
         case "View All Departments":
           await viewDepartments();
           break;
         case "Add Department":
           await addDepartment();
+          break;
+        case "Delete Department":
+          await deleteDepartment();
           break;
         case "Quit":
           process.exit();
@@ -117,9 +129,13 @@ const viewEmployees = async () => {
       CONCAT(m.first_name, ' ', m.last_name) AS Manager
     FROM employee AS e
     LEFT JOIN role r ON e.role_id = r.id
-    JOIN  department d ON r.department_id = d.id
+    LEFT JOIN department d ON r.department_id = d.id
     LEFT JOIN employee AS m ON e.manager_id = m.id`);
-  console.table(rows);
+  const transformed = rows.reduce((acc, { ID, ...x }) => {
+    acc[ID] = x;
+    return acc;
+  }, {});
+  console.table(transformed);
 };
 
 const getEmployees = async () => {
@@ -189,12 +205,32 @@ const updateEmployeeRole = async () => {
     },
   ]);
   await db.query(
-    `
-  UPDATE employee 
-  SET role_id = ? 
-  WHERE employee.id = ?`,
+    `UPDATE employee 
+    SET role_id = ? 
+    WHERE employee.id = ?`,
     [role, employee]
   );
+  console.log("Updated employee's role");
+};
+
+const deleteEmployee = async () => {
+  const { id } = await inquirer.prompt([
+    {
+      type: "list",
+      name: "id",
+      message: "Which employee do you want to delete?",
+      choices: await getEmployees(),
+    },
+  ]);
+  const [[{ name }], fields] = await db.query(
+    `SELECT 
+      CONCAT(first_name, " ", last_name) AS name 
+    FROM employee
+    WHERE id = ?`,
+    [id]
+  );
+  await db.query(`DELETE FROM employee WHERE id = ?`, [id]);
+  console.log(`Removed ${name} from the database`);
 };
 
 const viewRoles = async () => {
@@ -205,9 +241,13 @@ const viewRoles = async () => {
       d.name AS Department, 
       r.salary AS Salary 
     FROM role AS r
-    JOIN department d ON r.department_id = d.id
+    LEFT JOIN department d ON r.department_id = d.id
     `);
-  console.table(rows);
+  const transformed = rows.reduce((acc, { ID, ...x }) => {
+    acc[ID] = x;
+    return acc;
+  }, {});
+  console.table(transformed);
 };
 
 const getRoles = async () => {
@@ -249,6 +289,26 @@ const addRole = async () => {
   console.log(`Added ${title} to the database`);
 };
 
+const deleteRole = async () => {
+  const { id } = await inquirer.prompt([
+    {
+      type: "list",
+      name: "id",
+      message: "Which role do you want to delete?",
+      choices: await getRoles(),
+    },
+  ]);
+  const [[{ title }], fields] = await db.query(
+    `SELECT 
+      title 
+    FROM role
+    WHERE id = ?`,
+    [id]
+  );
+  await db.query(`DELETE FROM role WHERE id = ?`, [id]);
+  console.log(`Removed ${title} from the database`);
+};
+
 const viewDepartments = async () => {
   const [rows, fields] = await db.query(`
     SELECT
@@ -256,7 +316,11 @@ const viewDepartments = async () => {
       name AS Department 
     FROM department
     `);
-  console.table(rows);
+  const transformed = rows.reduce((acc, { ID, ...x }) => {
+    acc[ID] = x;
+    return acc;
+  }, {});
+  console.table(transformed);
 };
 
 const getDepartments = async () => {
@@ -276,6 +340,26 @@ const addDepartment = async () => {
   });
   await db.query(`INSERT INTO department (name) VALUES (?)`, [name]);
   console.log(`Added ${name} to the database`);
+};
+
+const deleteDepartment = async () => {
+  const { id } = await inquirer.prompt([
+    {
+      type: "list",
+      name: "id",
+      message: "Which department do you want to delete?",
+      choices: await getDepartments(),
+    },
+  ]);
+  const [[{ name }], fields] = await db.query(
+    `SELECT 
+      name 
+    FROM department
+    WHERE id = ?`,
+    [id]
+  );
+  console.log(`Removed ${name} from the database`);
+  await db.query(`DELETE FROM department WHERE id = ?`, [id]);
 };
 
 init();
