@@ -91,6 +91,7 @@ const menu = () => {
         case "Delete a Role":
           break;
         case "View All Departments":
+          viewDepartment();
           break;
         case "Add Department":
           break;
@@ -101,8 +102,8 @@ const menu = () => {
 };
 
 const viewEmployees = async () => {
-  const [rows, fields] = await db.execute(
-    `SELECT 
+  const [rows, fields] = await db.execute(`
+    SELECT 
       e.id AS ID, 
       e.first_name AS First_Name, 
       e.last_name AS Last_Name, 
@@ -113,22 +114,32 @@ const viewEmployees = async () => {
     FROM employee AS e
     LEFT JOIN role r ON e.role_id = r.id
     JOIN  department d ON r.department_id = d.id
-    LEFT JOIN employee AS m ON e.manager_id = m.id`
-  );
+    LEFT JOIN employee AS m ON e.manager_id = m.id`);
   console.table(rows);
   menu();
 };
 
 const viewRoles = async () => {
-  const [rows, fields] = await db.execute(
-    `SELECT
-    r.id AS ID, 
-    r.title AS Title, 
-    r.salary AS Salary, 
-    d.name AS Department 
+  const [rows, fields] = await db.execute(`
+    SELECT
+      r.id AS ID, 
+      r.title AS Title, 
+      r.salary AS Salary, 
+      d.name AS Department 
     FROM role AS r
-    JOIN department d ON r.department_id = d.id`
-  );
+    JOIN department d ON r.department_id = d.id
+    `);
+  console.table(rows);
+  menu();
+};
+
+const viewDepartment = async () => {
+  const [rows, fields] = await db.execute(`
+    SELECT
+      id AS ID, 
+      name AS Department 
+    FROM department
+    `);
   console.table(rows);
   menu();
 };
