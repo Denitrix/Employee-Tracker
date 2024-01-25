@@ -1,4 +1,42 @@
-# 12 SQL: Employee Tracker
+# SVG Logo Maker
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+## Table of Contents
+
+- [Description](#description)
+- [Installation](#installation)
+- [Usage](#usage)
+- [License](#license)
+- [Questions](#questions)
+
+## Description
+
+A command line application to manage and view a database of employees.
+
+## Installation
+
+Clone or download the repo and run the `npm i` command in your terminal.
+
+## Usage
+
+Start the app using `node server.js` and use the arrow keys to navigate the menu.
+
+[Untitled_ Jan 25 2024 1_50 AM.webm](https://github.com/Denitrix/Employee-Tracker/assets/15114255/b8ab00dc-6857-4935-9cb1-27e34f5e351d)
+
+## License
+
+This application is covered under the MIT License license.
+Please see here for more details (https://opensource.org/licenses/MIT).
+
+## Questions
+
+For any questions regarding this project, feel free to contact me through the following:
+
+- Email: alexmajors0613@gmail.com
+- GitHub: https://github.com/Denitrix
+  
+<!-- # 12 SQL: Employee Tracker
 
 ## Your Task
 
@@ -182,3 +220,5 @@ You are required to submit BOTH of the following for review:
 
 - - -
 © 2023 edX Boot Camps LLC. Confidential and Proprietary. All Rights Reserved.
+ -->
+ 
