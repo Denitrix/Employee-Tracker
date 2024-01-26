@@ -22,7 +22,7 @@ Clone or download the repo and run the `npm i` command in your terminal.
 
 Start the app using `node server.js` and use the arrow keys to navigate the menu.
 
-[Untitled_ Jan 25 2024 1_50 AM.webm](https://github.com/Denitrix/Employee-Tracker/assets/15114255/b8ab00dc-6857-4935-9cb1-27e34f5e351d)
+[Walkthrough.webm](https://github.com/Denitrix/Employee-Tracker/assets/15114255/b8ab00dc-6857-4935-9cb1-27e34f5e351d)
 
 ## License
 
@@ -35,7 +35,7 @@ For any questions regarding this project, feel free to contact me through the fo
 
 - Email: alexmajors0613@gmail.com
 - GitHub: https://github.com/Denitrix
-  
+
 <!-- # 12 SQL: Employee Tracker
 
 ## Your Task
@@ -73,7 +73,7 @@ THEN I am prompted to enter the name, salary, and department for the role and th
 WHEN I choose to add an employee
 THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
 WHEN I choose to update an employee role
-THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
+THEN I am prompted to select an employee to update and their new role and this information is updated in the database
 ```
 
 ## Mock-Up
@@ -221,4 +221,3 @@ You are required to submit BOTH of the following for review:
 - - -
 © 2023 edX Boot Camps LLC. Confidential and Proprietary. All Rights Reserved.
  -->
- 
